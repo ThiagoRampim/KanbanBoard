@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS "user".user_board(
 	user_id		uuid			NOT NULL REFERENCES "user"."user"(id)
 );
 
-CREATE TABLE IF NOT EXISTS board."column"(
+CREATE TABLE IF NOT EXISTS board.board_column(
 	id 			uuid			PRIMARY KEY,
 	"name"		VARCHAR(150)	NOT NULL,
 	"position"	int				NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS board.card(
 	id 				uuid			PRIMARY KEY,
 	title			VARCHAR(150)	NOT NULL,
 	description		TEXT			NULL,
-	column_id		uuid			NOT NULL REFERENCES board."column"(id),
+	board_column_id uuid			NOT NULL REFERENCES board.board_column(id),
 	start_date		TIMESTAMPTZ(6)	NULL,
 	end_date		TIMESTAMPTZ(6)	NULL,
 	concluded_at	TIMESTAMPTZ(6)	NULL,
@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS board.card(
 
 CREATE TABLE IF NOT EXISTS "user".user_card(
 	id 			uuid			PRIMARY KEY,
-	card_id		uuid			NOT NULL REFERENCES board.card(id),
-	user_id		uuid			NOT NULL REFERENCES "user"."user"(id)
+	user_id		uuid			NOT NULL REFERENCES "user"."user"(id),
+	card_id		uuid			NOT NULL REFERENCES board.card(id)
 );
 
 CREATE TABLE IF NOT EXISTS board.card_history(
@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS board.card_tag(
 -- DROP TABLE IF EXISTS board.card_history;
 -- DROP TABLE IF EXISTS "user".user_card;
 -- DROP TABLE IF EXISTS board.card;
--- DROP TABLE IF EXISTS board."column";
+-- DROP TABLE IF EXISTS board.board_column;
 -- DROP TABLE IF EXISTS "user".user_board;
 -- DROP TABLE IF EXISTS board.board;
 -- DROP TABLE IF EXISTS "user"."user";
