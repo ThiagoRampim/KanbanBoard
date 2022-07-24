@@ -1,4 +1,4 @@
-package com.kanban.board.model.entity.board
+package com.kanban.board.domain.core.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import java.util.*

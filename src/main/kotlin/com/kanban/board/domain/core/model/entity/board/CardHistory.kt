@@ -1,7 +1,7 @@
-package com.kanban.board.model.entity.board
+package com.kanban.board.domain.core.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.kanban.board.model.entity.user.User
+import com.kanban.board.domain.core.model.entity.user.User
 import org.hibernate.annotations.CreationTimestamp
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now

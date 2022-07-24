@@ -1,4 +1,4 @@
-package com.kanban.board.model.entity.board
+package com.kanban.board.domain.core.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
@@ -8,19 +8,19 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-@Table(schema = "board", name = "check_list")
-data class CheckList(
+@Table(schema = "board", name = "check_list_item")
+data class CheckListItem(
     @Id
     @Column(name = "id")
     var id: UUID = UUID.randomUUID(),
 
-    @Column(name = "title", length = 150, nullable = false)
-    var type: String,
+    @Column(name = "description", length = 350, nullable = false)
+    var description: String,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "card_id", nullable = false, referencedColumnName = "id")
-    var card: Card,
+    @JoinColumn(name = "check_list_id", nullable = false, referencedColumnName = "id")
+    var checkList: CheckList,
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)

@@ -1,4 +1,4 @@
-package com.kanban.board.model.entity.board
+package com.kanban.board.domain.core.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
@@ -6,20 +6,19 @@ import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 import java.util.*
 import javax.persistence.*
-import javax.persistence.Column
 
 @Entity
-@Table(schema = "board", name = "board_column")
-data class BoardColumn(
+@Table(schema = "board", name = "tag")
+data class Tag(
     @Id
     @Column(name = "id")
     var id: UUID = UUID.randomUUID(),
 
-    @Column(name = "name", length = 150, nullable = false)
-    var name: String,
+    @Column(name = "title", length = 150, nullable = true)
+    var type: String?,
 
-    @Column(name = "position", nullable = false)
-    var position: Int,
+    @Column(name = "color", length = 7, nullable = false)
+    var color: String,
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)

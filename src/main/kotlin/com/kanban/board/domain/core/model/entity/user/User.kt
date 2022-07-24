@@ -1,4 +1,4 @@
-package com.kanban.board.model.entity.user
+package com.kanban.board.domain.core.model.entity.user
 
 import org.hibernate.annotations.CreationTimestamp
 import java.time.OffsetDateTime

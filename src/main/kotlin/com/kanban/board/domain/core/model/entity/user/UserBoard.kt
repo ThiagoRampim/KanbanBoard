@@ -1,7 +1,7 @@
-package com.kanban.board.model.entity.user
+package com.kanban.board.domain.core.model.entity.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import com.kanban.board.model.entity.board.Board
+import com.kanban.board.domain.core.model.entity.board.Board
 import java.util.*
 import javax.persistence.*
 
