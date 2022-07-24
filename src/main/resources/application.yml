@@ -2,12 +2,8 @@ server:
   port: ${SERVER_PORT:8080}
 spring:
   application:
-    dysplay-name: Kanban board
+    display-name: Kanban board
   flyway:
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:49153/postgres}
-    user: ${POSTGRES_USER:postgres}
-    password: ${POSTGRES_PASS:postgrespw}
-    baseline-on-migrate: true
     schemas: public
   datasource:
     hikari:
@@ -19,22 +15,12 @@ spring:
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:49153/postgres}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASS:postgrespw}
-    platform: postgres
-    initialization-mode: always
-    continue-on-error: true
   jpa:
     hibernate:
-      ddl-auto: validate
       show-sql: false
     properties:
-        hibernate:
-          globally_quoted_identifiers: true
-          dialect: org.hibernate.dialect.PostgresSQLDialect
-          show_sql: false
-          format_sql: true
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-
-#logging:
-#  level:
-#    root: debug
+      hibernate:
+        globally_quoted_identifiers: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        show_sql: false
+        format_sql: true

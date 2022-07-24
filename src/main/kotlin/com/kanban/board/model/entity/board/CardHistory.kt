@@ -3,7 +3,6 @@ package com.kanban.board.model.entity.board
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.kanban.board.model.entity.user.User
 import org.hibernate.annotations.CreationTimestamp
-import org.springframework.data.annotation.Id
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 import java.util.*

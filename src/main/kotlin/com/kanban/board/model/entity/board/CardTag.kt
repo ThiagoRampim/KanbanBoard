@@ -1,7 +1,6 @@
 package com.kanban.board.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
-import org.springframework.data.annotation.Id
 import java.util.*
 import javax.persistence.*
 

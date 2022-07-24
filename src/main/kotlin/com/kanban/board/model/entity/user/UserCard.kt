@@ -2,7 +2,6 @@ package com.kanban.board.model.entity.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.kanban.board.model.entity.board.Card
-import org.springframework.data.annotation.Id
 import java.util.*
 import javax.persistence.*
 

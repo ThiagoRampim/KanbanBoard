@@ -1,12 +1,12 @@
 package com.kanban.board.model.entity.user
 
 import org.hibernate.annotations.CreationTimestamp
-import org.springframework.data.annotation.Id
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 import java.util.UUID
 import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
