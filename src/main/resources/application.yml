@@ -12,7 +12,7 @@ spring:
       maxLifetime: 60000
       maximum-pool-size: 5
     driverClassName: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:49153/postgres}
+    url: ${POSTGRES_URL:jdbc:postgresql://host.docker.internal:49153/postgres}
     username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASS:postgrespw}
   jpa:
