@@ -24,3 +24,5 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         show_sql: false
         format_sql: true
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
