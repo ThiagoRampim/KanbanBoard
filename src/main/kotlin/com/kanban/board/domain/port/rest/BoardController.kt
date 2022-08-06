@@ -1,8 +1,8 @@
 package com.kanban.board.domain.port.rest
 
-import com.kanban.board.domain.core.model.request.CreateBoardRequest
-import com.kanban.board.domain.core.model.request.UpdateBoardRequest
-import com.kanban.board.domain.core.model.response.SavedBoardResponse
+import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
+import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
+import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

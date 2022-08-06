@@ -1,4 +1,4 @@
-package com.kanban.board.domain.core.model.request
+package com.kanban.board.domain.core.model.request.board
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

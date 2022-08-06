@@ -1,8 +1,8 @@
 package com.kanban.board.adapter.rest
 
-import com.kanban.board.domain.core.model.request.CreateBoardRequest
-import com.kanban.board.domain.core.model.request.UpdateBoardRequest
-import com.kanban.board.domain.core.model.response.SavedBoardResponse
+import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
+import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
+import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
 import com.kanban.board.domain.port.rest.BoardController
 import com.kanban.board.domain.port.service.BoardService
 import org.springframework.http.ResponseEntity

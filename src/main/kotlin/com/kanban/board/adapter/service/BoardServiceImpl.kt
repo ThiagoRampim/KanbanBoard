@@ -1,10 +1,11 @@
 package com.kanban.board.adapter.service
 
 import com.kanban.board.domain.core.model.entity.board.Board
+import com.kanban.board.domain.core.model.entity.board.BoardColumn
 import com.kanban.board.domain.core.model.extension.toSavedBoardResponse
-import com.kanban.board.domain.core.model.request.CreateBoardRequest
-import com.kanban.board.domain.core.model.request.UpdateBoardRequest
-import com.kanban.board.domain.core.model.response.SavedBoardResponse
+import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
+import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
+import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
 import com.kanban.board.domain.port.repository.BoardRepository
 import com.kanban.board.domain.port.service.BoardService
 import com.kanban.board.shared.exception.BadRequestException
@@ -17,21 +18,29 @@ class BoardServiceImpl(
 ) : BoardService {
 
     override fun createBoard(createBoardRequest: CreateBoardRequest): SavedBoardResponse {
-        val savedBoard = boardRepository.save(
-            Board(name = createBoardRequest.name)
-        )
-        return savedBoard.toSavedBoardResponse()
+        val board = Board(name = createBoardRequest.name)
+        board.apply {
+            this.columns.addAll(
+                listOf(
+                    BoardColumn(name = "Backlog", position = 0, board = this),
+                    BoardColumn(name = "To-do", position = 1, board = this),
+                    BoardColumn(name = "Doing", position = 2, board = this),
+                    BoardColumn(name = "Review", position = 3, board = this),
+                    BoardColumn(name = "Done", position = 4, board = this)
+                )
+            )
+        }
+
+        return boardRepository.save(board).toSavedBoardResponse()
     }
 
     override fun updateBoard(boardId: UUID, updateBoardRequest: UpdateBoardRequest): SavedBoardResponse {
         val board = findBoardByIdOrElseThrow(boardId)
-
         board.apply {
             this.name = updateBoardRequest.name
         }
 
-        val savedBoard = boardRepository.save(board)
-        return savedBoard.toSavedBoardResponse()
+        return boardRepository.save(board).toSavedBoardResponse()
     }
 
     override fun findBoard(boardId: UUID): SavedBoardResponse {
@@ -44,7 +53,7 @@ class BoardServiceImpl(
     }
 
     private fun findBoardById(boardId: UUID): Board? {
-        return boardRepository.findById(boardId).orElse(null)
+        return boardRepository.findByIdFetched(boardId)
     }
 
 }
