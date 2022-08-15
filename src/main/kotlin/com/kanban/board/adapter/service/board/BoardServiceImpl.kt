@@ -1,13 +1,13 @@
-package com.kanban.board.adapter.service
+package com.kanban.board.adapter.service.board
 
 import com.kanban.board.domain.core.model.entity.board.Board
 import com.kanban.board.domain.core.model.entity.board.BoardColumn
-import com.kanban.board.domain.core.model.extension.toSavedBoardResponse
+import com.kanban.board.domain.core.model.extension.board.toSavedBoardResponse
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
-import com.kanban.board.domain.port.repository.BoardRepository
-import com.kanban.board.domain.port.service.BoardService
+import com.kanban.board.domain.port.repository.board.BoardRepository
+import com.kanban.board.domain.port.service.board.BoardService
 import com.kanban.board.shared.exception.BadRequestException
 import org.springframework.stereotype.Service
 import java.util.*
@@ -47,12 +47,12 @@ class BoardServiceImpl(
         return findBoardByIdOrElseThrow(boardId).toSavedBoardResponse()
     }
 
-    private fun findBoardByIdOrElseThrow(boardId: UUID): Board {
+    override fun findBoardByIdOrElseThrow(boardId: UUID): Board {
         return findBoardById(boardId)
             ?: throw BadRequestException("Quadro não encontrado")
     }
 
-    private fun findBoardById(boardId: UUID): Board? {
+    override fun findBoardById(boardId: UUID): Board? {
         return boardRepository.findByIdFetched(boardId)
     }
 

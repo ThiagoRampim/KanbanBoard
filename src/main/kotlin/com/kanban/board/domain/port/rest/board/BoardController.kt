@@ -1,4 +1,4 @@
-package com.kanban.board.domain.port.rest
+package com.kanban.board.domain.port.rest.board
 
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest

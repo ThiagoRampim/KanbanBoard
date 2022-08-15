@@ -1,4 +1,4 @@
-package com.kanban.board.domain.port.repository
+package com.kanban.board.domain.port.repository.board
 
 import com.kanban.board.domain.core.model.entity.board.Board
 import org.springframework.data.jpa.repository.JpaRepository
@@ -14,6 +14,7 @@ interface BoardRepository : JpaRepository<Board, UUID> {
             SELECT board
             FROM Board AS board
             INNER JOIN FETCH board.columns AS column 
+            WHERE board.id = :boardId
         """
     )
     fun findByIdFetched(boardId: UUID): Board?

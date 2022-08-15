@@ -1,7 +1,6 @@
-package com.kanban.board.domain.core.model.extension
+package com.kanban.board.domain.core.model.extension.board
 
 import com.kanban.board.domain.core.model.entity.board.Board
-import com.kanban.board.domain.core.model.extension.board.toSavedBoardColumnResponse
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
 
 fun Board.toSavedBoardResponse() =

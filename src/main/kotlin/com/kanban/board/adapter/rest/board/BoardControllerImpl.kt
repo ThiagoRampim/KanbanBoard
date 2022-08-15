@@ -1,10 +1,10 @@
-package com.kanban.board.adapter.rest
+package com.kanban.board.adapter.rest.board
 
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
-import com.kanban.board.domain.port.rest.BoardController
-import com.kanban.board.domain.port.service.BoardService
+import com.kanban.board.domain.port.rest.board.BoardController
+import com.kanban.board.domain.port.service.board.BoardService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
