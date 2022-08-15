@@ -27,6 +27,10 @@ spring:
 #  autoconfigure:
 #    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
 
+springdoc:
+  packagesToScan: com.kanban.board
+
+
 logging:
   level:
     org.hibernate.SQL: INFO
