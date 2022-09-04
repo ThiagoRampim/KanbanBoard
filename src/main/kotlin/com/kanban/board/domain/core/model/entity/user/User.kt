@@ -31,6 +31,9 @@ data class User(
     @Column(name = "is_active", nullable = false)
     var isActive: Boolean,
 
+    @Column(name = "password", length = 60, nullable = false)
+    var password: String,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     var createdAt: OffsetDateTime = now()

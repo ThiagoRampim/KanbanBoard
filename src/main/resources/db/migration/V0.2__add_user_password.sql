@@ -1,0 +1,7 @@
+ALTER TABLE "user"."user"
+ADD COLUMN IF NOT EXISTS "password" VARCHAR(60) NOT NULL;
+
+-- ROOLBACK
+
+-- ALTER TABLE "user"."user"
+-- DROP COLUMN IF EXISTS "password";
