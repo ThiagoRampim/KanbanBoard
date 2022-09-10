@@ -2,7 +2,6 @@ package com.kanban.board.domain.core.model.request.board
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
-import java.util.UUID
 
 data class AddCardRequest(
     @JsonProperty("title")
@@ -18,8 +17,5 @@ data class AddCardRequest(
     val endDate: OffsetDateTime? = null,
 
     @JsonProperty("concluded_at")
-    val concludedAt: OffsetDateTime? = null,
-
-    @JsonProperty("column_id")
-    val columnId: UUID
+    val concludedAt: OffsetDateTime? = null
 )

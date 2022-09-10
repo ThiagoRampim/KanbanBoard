@@ -1,6 +1,8 @@
 package com.kanban.board.domain.port.repository.board
 
 import com.kanban.board.domain.core.model.entity.board.Card
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.util.UUID
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
@@ -16,9 +18,30 @@ interface CardRepository: JpaRepository<Card, UUID> {
             INNER JOIN FETCH card.boardColumn AS boardColumn
             INNER JOIN FETCH boardColumn.board AS board
             WHERE card.id = :cardId
+            AND boardColumn.id = :boardColumnId
             AND board.id = :boardId
         """
     )
-    fun findByIdAndBoardId(cardId: UUID, boardId: UUID): Card?
+    fun findByIdAndBoardColumnIdAndBoardId(cardId: UUID, boardColumnId: UUID, boardId: UUID): Card?
+
+    @Query(
+        value = """
+            SELECT card
+            FROM Card AS card
+            INNER JOIN FETCH card.boardColumn AS boardColumn
+            INNER JOIN FETCH boardColumn.board AS board
+            WHERE boardColumn.id = :boardColumnId
+            AND board.id = :boardId
+        """,
+        countQuery = """
+            SELECT COUNT(card)
+            FROM Card AS card
+            INNER JOIN card.boardColumn AS boardColumn
+            INNER JOIN boardColumn.board AS board
+            WHERE boardColumn.id = :boardColumnId
+            AND board.id = :boardId
+        """
+    )
+    fun findAllByBoardColumnIdAndColumnId(boardColumnId: UUID, boardId: UUID, pageable: Pageable): Page<Card>
 
 }
