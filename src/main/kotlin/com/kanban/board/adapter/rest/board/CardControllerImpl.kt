@@ -5,8 +5,8 @@ import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
 import com.kanban.board.domain.core.model.response.board.SaveCardRespose
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
-import com.kanban.board.domain.port.rest.board.BoardColumnController
-import com.kanban.board.domain.port.service.board.BoardColumnService
+import com.kanban.board.domain.port.rest.board.CardController
+import com.kanban.board.domain.port.service.board.CardService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -16,16 +16,16 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @Tag(name = "Card", description = "Provides card apis")
-class BoardColumnControllerImpl(
-    val boardColumnService: BoardColumnService
-): BoardColumnController {
+class CardControllerImpl(
+    val cardService: CardService
+): CardController {
 
-    override fun addCard(
+    override fun createCard(
         boardId: UUID,
         columnId: UUID,
         addCardRequest: AddCardRequest
     ): ResponseEntity<SaveCardRespose> {
-        return ResponseEntity.ok(boardColumnService.addCard(boardId, columnId, addCardRequest))
+        return ResponseEntity.ok(cardService.createCard(boardId, columnId, addCardRequest))
     }
 
     override fun updateCard(
@@ -34,7 +34,7 @@ class BoardColumnControllerImpl(
         cardId: UUID,
         updateCardRequest: UpdateCardRequest
     ): ResponseEntity<SaveCardRespose> {
-        return ResponseEntity.ok(boardColumnService.updateCard(boardId, columnId, cardId, updateCardRequest))
+        return ResponseEntity.ok(cardService.updateCard(boardId, columnId, cardId, updateCardRequest))
     }
 
     override fun findCardsByColumn(
@@ -42,11 +42,11 @@ class BoardColumnControllerImpl(
         columnId: UUID,
         pageable: Pageable
     ): ResponseEntity<Page<SimpleCardResponse>> {
-        return ResponseEntity.ok(boardColumnService.findCardsByColumn(boardId, columnId, pageable))
+        return ResponseEntity.ok(cardService.findCardsByColumn(boardId, columnId, pageable))
     }
 
     override fun findCardDetails(boardId: UUID, columnId: UUID, cardId: UUID): ResponseEntity<CardDetailsResponse> {
-        return ResponseEntity.ok(boardColumnService.findCardDetails(boardId, columnId, cardId))
+        return ResponseEntity.ok(cardService.findCardDetails(boardId, columnId, cardId))
     }
 
 }

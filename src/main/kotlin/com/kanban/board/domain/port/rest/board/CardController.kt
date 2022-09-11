@@ -18,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 
 @RequestMapping("/api/v1/column/{columnId}")
-interface BoardColumnController {
+interface CardController {
 
     @PostMapping("/card")
-    fun addCard(
+    fun createCard(
         @RequestHeader("Board-Id") boardId: UUID,
         @PathVariable("columnId") columnId: UUID,
         @RequestBody addCardRequest: AddCardRequest

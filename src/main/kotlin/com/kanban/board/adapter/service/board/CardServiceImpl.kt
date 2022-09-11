@@ -12,7 +12,7 @@ import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsRespon
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
 import com.kanban.board.domain.port.repository.board.BoardColumnRepository
 import com.kanban.board.domain.port.repository.board.CardRepository
-import com.kanban.board.domain.port.service.board.BoardColumnService
+import com.kanban.board.domain.port.service.board.CardService
 import com.kanban.board.shared.exception.BadRequestException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -20,12 +20,12 @@ import java.util.UUID
 import org.springframework.stereotype.Service
 
 @Service
-class BoardColumnServiceImpl(
-    val boardColumnRepository: BoardColumnRepository,
-    val cardRepository: CardRepository
-): BoardColumnService {
+class CardServiceImpl(
+    val cardRepository: CardRepository,
+    val boardColumnRepository: BoardColumnRepository
+): CardService {
 
-    override fun addCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardRespose {
+    override fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardRespose {
         val boardColumn = findBoardColumnByIdAndBoardIdOrElseThrow(columnId, boardId)
         val card = Card(
             title = addCardRequest.title,

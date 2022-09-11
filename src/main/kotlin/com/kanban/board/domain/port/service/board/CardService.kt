@@ -9,9 +9,9 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import java.util.UUID
 
-interface BoardColumnService {
+interface CardService {
 
-    fun addCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardRespose
+    fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardRespose
 
     fun updateCard(boardId: UUID, columnId: UUID, cardId: UUID, updateCardRequest: UpdateCardRequest): SaveCardRespose
 
