@@ -17,17 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 
-@RequestMapping("/api/v1/column/{columnId}")
+@RequestMapping("/api/v1/column/{columnId}/card")
 interface CardController {
 
-    @PostMapping("/card")
+    @PostMapping()
     fun createCard(
         @RequestHeader("Board-Id") boardId: UUID,
         @PathVariable("columnId") columnId: UUID,
         @RequestBody addCardRequest: AddCardRequest
     ): ResponseEntity<SaveCardRespose>
 
-    @PutMapping("/card/{cardId}")
+    @PutMapping("/{cardId}")
     fun updateCard(
         @RequestHeader("Board-Id") boardId: UUID,
         @PathVariable("columnId") columnId: UUID,
@@ -35,14 +35,14 @@ interface CardController {
         @RequestBody updateCardRequest: UpdateCardRequest
     ): ResponseEntity<SaveCardRespose>
 
-    @GetMapping("/cards")
+    @GetMapping("/list")
     fun findCardsByColumn(
         @RequestHeader("Board-Id") boardId: UUID,
         @PathVariable("columnId") columnId: UUID,
         pageable: Pageable
     ): ResponseEntity<Page<SimpleCardResponse>>
 
-    @GetMapping("/card/{cardId}/details")
+    @GetMapping("/{cardId}/details")
     fun findCardDetails(
         @RequestHeader("Board-Id") boardId: UUID,
         @PathVariable("columnId") columnId: UUID,
