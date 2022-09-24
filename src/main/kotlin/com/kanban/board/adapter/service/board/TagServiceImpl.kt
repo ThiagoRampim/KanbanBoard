@@ -1,0 +1,46 @@
+package com.kanban.board.adapter.service.board
+
+import com.kanban.board.domain.core.model.entity.board.Board
+import com.kanban.board.domain.core.model.entity.board.Tag
+import com.kanban.board.domain.core.model.extension.board.toSaveTagResponse
+import com.kanban.board.domain.core.model.request.board.CreateTagRequest
+import com.kanban.board.domain.core.model.response.board.SaveTagResponse
+import com.kanban.board.domain.enums.TagTypeEnum
+import com.kanban.board.domain.port.repository.board.BoardRepository
+import com.kanban.board.domain.port.repository.board.TagRepository
+import com.kanban.board.domain.port.service.board.TagService
+import com.kanban.board.shared.exception.BadRequestException
+import org.springframework.stereotype.Service
+import java.util.*
+
+@Service
+class TagServiceImpl(
+    private val tagRepository: TagRepository,
+    private val boardRepository: BoardRepository
+) : TagService {
+
+    override fun createTag(boardId: UUID, createTagRequest: CreateTagRequest): SaveTagResponse {
+        val board = findBoardByIdOrElseThrow(boardId)
+        val tag = Tag(
+            title = createTagRequest.title,
+            type = TagTypeEnum.DESCRIPTION,
+            color = createTagRequest.color,
+            board = board
+        )
+        return tagRepository.save(tag).toSaveTagResponse()
+    }
+
+    override fun listTags(boardId: UUID): List<SaveTagResponse> {
+        return tagRepository.findAllByBoardId(boardId).map { it.toSaveTagResponse() }
+    }
+
+    private fun findBoardByIdOrElseThrow(boardId: UUID): Board {
+        return findBoardById(boardId)
+            ?: throw BadRequestException("Quadro não encontrado")
+    }
+
+    private fun findBoardById(boardId: UUID): Board? {
+        return boardRepository.findByIdFetched(boardId)
+    }
+
+}

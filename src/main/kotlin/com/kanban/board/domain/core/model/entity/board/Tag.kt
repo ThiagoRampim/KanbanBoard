@@ -1,6 +1,7 @@
 package com.kanban.board.domain.core.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.kanban.board.domain.enums.TagTypeEnum
 import org.hibernate.annotations.CreationTimestamp
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
@@ -15,7 +16,11 @@ data class Tag(
     var id: UUID = UUID.randomUUID(),
 
     @Column(name = "title", length = 150, nullable = true)
-    var type: String?,
+    var title: String?,
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "type", length = 30, nullable = false)
+    var type: TagTypeEnum,
 
     @Column(name = "color", length = 7, nullable = false)
     var color: String,
