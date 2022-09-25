@@ -17,7 +17,8 @@ class UserDetailServiceImpl(
             throw BadRequestException("Username cannot be null")
         }
 
-        val user = userRepository.findByEmail(username)
+        val user = userRepository.findByEmail(username) ?: throw BadRequestException("User not found")
+
         return UserDetailsResponse(
             user.email,
             user.password,

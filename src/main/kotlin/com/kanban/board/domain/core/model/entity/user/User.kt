@@ -1,13 +1,11 @@
 package com.kanban.board.domain.core.model.entity.user
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.hibernate.annotations.CreationTimestamp
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
 import java.util.UUID
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(schema = "user", name = "user")
@@ -36,5 +34,9 @@ data class User(
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
-    var createdAt: OffsetDateTime = now()
+    var createdAt: OffsetDateTime = now(),
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
+    var boardRelations: MutableList<UserBoard> = mutableListOf()
 )

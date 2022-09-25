@@ -3,6 +3,8 @@ package com.kanban.board.adapter.service.board
 import com.kanban.board.domain.core.model.entity.board.Board
 import com.kanban.board.domain.core.model.entity.board.BoardColumn
 import com.kanban.board.domain.core.model.entity.board.Tag
+import com.kanban.board.domain.core.model.entity.user.User
+import com.kanban.board.domain.core.model.entity.user.UserBoard
 import com.kanban.board.domain.core.model.extension.board.toSavedBoardResponse
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
@@ -19,7 +21,7 @@ class BoardServiceImpl(
     private val boardRepository: BoardRepository
 ) : BoardService {
 
-    override fun createBoard(createBoardRequest: CreateBoardRequest): SavedBoardResponse {
+    override fun createBoard(createBoardRequest: CreateBoardRequest, actorUser: User): SavedBoardResponse {
         val board = Board(name = createBoardRequest.name)
         board.apply {
             this.columns.addAll(
@@ -37,6 +39,9 @@ class BoardServiceImpl(
                     Tag(title = "Média", type = TagTypeEnum.PRIORITY, color = "#FFEF1F", board = this),
                     Tag(title = "Baixa", type = TagTypeEnum.PRIORITY, color = "#79FF1F", board = this)
                 )
+            )
+            this.userRelations.add(
+                UserBoard(user = actorUser, board = this)
             )
         }
 

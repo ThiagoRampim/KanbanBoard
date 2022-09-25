@@ -7,6 +7,7 @@ import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsRespon
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
 import com.kanban.board.domain.port.rest.board.CardController
 import com.kanban.board.domain.port.service.board.CardService
+import com.kanban.board.domain.port.service.user.UserService
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @Tag(name = "Card", description = "Provides card apis")
 class CardControllerImpl(
-    val cardService: CardService
+    val cardService: CardService,
+    private val userService: UserService
 ): CardController {
 
     override fun createCard(
@@ -25,6 +27,7 @@ class CardControllerImpl(
         columnId: UUID,
         addCardRequest: AddCardRequest
     ): ResponseEntity<SaveCardRespose> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.createCard(boardId, columnId, addCardRequest))
     }
 
@@ -34,6 +37,7 @@ class CardControllerImpl(
         cardId: UUID,
         updateCardRequest: UpdateCardRequest
     ): ResponseEntity<SaveCardRespose> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.updateCard(boardId, columnId, cardId, updateCardRequest))
     }
 
@@ -42,10 +46,12 @@ class CardControllerImpl(
         columnId: UUID,
         pageable: Pageable
     ): ResponseEntity<Page<SimpleCardResponse>> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.findCardsByColumn(boardId, columnId, pageable))
     }
 
     override fun findCardDetails(boardId: UUID, columnId: UUID, cardId: UUID): ResponseEntity<CardDetailsResponse> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.findCardDetails(boardId, columnId, cardId))
     }
 

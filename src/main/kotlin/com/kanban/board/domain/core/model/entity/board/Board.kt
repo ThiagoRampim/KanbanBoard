@@ -1,6 +1,7 @@
 package com.kanban.board.domain.core.model.entity.board
 
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.kanban.board.domain.core.model.entity.user.UserBoard
 import org.hibernate.annotations.CreationTimestamp
 import java.time.OffsetDateTime
 import java.time.OffsetDateTime.now
@@ -30,6 +31,10 @@ data class Board(
     @JsonIgnore
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
     var tags: MutableList<Tag> = mutableListOf(),
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
+    var userRelations: MutableList<UserBoard> = mutableListOf(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
