@@ -27,6 +27,10 @@ data class Board(
     @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
     var columns: MutableList<BoardColumn> = mutableListOf(),
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
+    var tags: MutableList<Tag> = mutableListOf(),
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     var createdAt: OffsetDateTime = now()

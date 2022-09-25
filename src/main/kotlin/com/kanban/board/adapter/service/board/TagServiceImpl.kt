@@ -2,9 +2,9 @@ package com.kanban.board.adapter.service.board
 
 import com.kanban.board.domain.core.model.entity.board.Board
 import com.kanban.board.domain.core.model.entity.board.Tag
-import com.kanban.board.domain.core.model.extension.board.toSaveTagResponse
+import com.kanban.board.domain.core.model.extension.board.toSavedTagResponse
 import com.kanban.board.domain.core.model.request.board.CreateTagRequest
-import com.kanban.board.domain.core.model.response.board.SaveTagResponse
+import com.kanban.board.domain.core.model.response.board.SavedTagResponse
 import com.kanban.board.domain.enums.TagTypeEnum
 import com.kanban.board.domain.port.repository.board.BoardRepository
 import com.kanban.board.domain.port.repository.board.TagRepository
@@ -19,7 +19,7 @@ class TagServiceImpl(
     private val boardRepository: BoardRepository
 ) : TagService {
 
-    override fun createTag(boardId: UUID, createTagRequest: CreateTagRequest): SaveTagResponse {
+    override fun createTag(boardId: UUID, createTagRequest: CreateTagRequest): SavedTagResponse {
         val board = findBoardByIdOrElseThrow(boardId)
         val tag = Tag(
             title = createTagRequest.title,
@@ -27,11 +27,11 @@ class TagServiceImpl(
             color = createTagRequest.color,
             board = board
         )
-        return tagRepository.save(tag).toSaveTagResponse()
+        return tagRepository.save(tag).toSavedTagResponse()
     }
 
-    override fun listTags(boardId: UUID): List<SaveTagResponse> {
-        return tagRepository.findAllByBoardId(boardId).map { it.toSaveTagResponse() }
+    override fun listTags(boardId: UUID): List<SavedTagResponse> {
+        return tagRepository.findAllByBoardId(boardId).map { it.toSavedTagResponse() }
     }
 
     private fun findBoardByIdOrElseThrow(boardId: UUID): Board {

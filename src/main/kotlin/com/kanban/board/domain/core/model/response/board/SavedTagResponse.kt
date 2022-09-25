@@ -5,7 +5,7 @@ import com.kanban.board.domain.enums.TagTypeEnum
 import java.time.OffsetDateTime
 import java.util.*
 
-data class SaveTagResponse(
+data class SavedTagResponse(
     @JsonProperty("id")
     val id: UUID,
 

@@ -8,5 +8,6 @@ fun Board.toSavedBoardResponse() =
         id = this.id,
         name = this.name,
         columns = this.columns.map { it.toSavedBoardColumnResponse() }.sortedBy { it.position },
+        tags = this.tags.map { it.toSavedTagResponse() },
         createdAt = this.createdAt
     )

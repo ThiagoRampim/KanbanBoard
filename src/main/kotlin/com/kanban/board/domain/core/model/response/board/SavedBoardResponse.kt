@@ -5,7 +5,7 @@ import java.time.OffsetDateTime
 import java.util.*
 import kotlin.collections.List
 
-data class SavedBoardResponse (
+data class SavedBoardResponse(
     @JsonProperty("id")
     val id: UUID,
 
@@ -14,6 +14,9 @@ data class SavedBoardResponse (
 
     @JsonProperty("columns")
     val columns: List<SavedBoardColumnResponse>,
+
+    @JsonProperty("tags")
+    val tags: List<SavedTagResponse>,
 
     @JsonProperty("created_at")
     val createdAt: OffsetDateTime

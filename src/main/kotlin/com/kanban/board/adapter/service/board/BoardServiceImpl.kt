@@ -2,10 +2,12 @@ package com.kanban.board.adapter.service.board
 
 import com.kanban.board.domain.core.model.entity.board.Board
 import com.kanban.board.domain.core.model.entity.board.BoardColumn
+import com.kanban.board.domain.core.model.entity.board.Tag
 import com.kanban.board.domain.core.model.extension.board.toSavedBoardResponse
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.enums.TagTypeEnum
 import com.kanban.board.domain.port.repository.board.BoardRepository
 import com.kanban.board.domain.port.service.board.BoardService
 import com.kanban.board.shared.exception.BadRequestException
@@ -27,6 +29,13 @@ class BoardServiceImpl(
                     BoardColumn(name = "Doing", position = 2, board = this),
                     BoardColumn(name = "Review", position = 3, board = this),
                     BoardColumn(name = "Done", position = 4, board = this)
+                )
+            )
+            this.tags.addAll(
+                listOf(
+                    Tag(title = "Alta", type = TagTypeEnum.PRIORITY, color = "#FF1F1F", board = this),
+                    Tag(title = "Média", type = TagTypeEnum.PRIORITY, color = "#FFEF1F", board = this),
+                    Tag(title = "Baixa", type = TagTypeEnum.PRIORITY, color = "#79FF1F", board = this)
                 )
             )
         }

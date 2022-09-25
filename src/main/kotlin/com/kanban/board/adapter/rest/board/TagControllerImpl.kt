@@ -1,7 +1,7 @@
 package com.kanban.board.adapter.rest.board
 
 import com.kanban.board.domain.core.model.request.board.CreateTagRequest
-import com.kanban.board.domain.core.model.response.board.SaveTagResponse
+import com.kanban.board.domain.core.model.response.board.SavedTagResponse
 import com.kanban.board.domain.port.rest.board.TagController
 import com.kanban.board.domain.port.service.board.TagService
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -18,11 +18,11 @@ class TagControllerImpl(
     override fun createTag(
         boardId: UUID,
         createTagRequest: CreateTagRequest
-    ): ResponseEntity<SaveTagResponse> {
+    ): ResponseEntity<SavedTagResponse> {
         return ResponseEntity.ok(tagService.createTag(boardId, createTagRequest))
     }
 
-    override fun listTags(boardId: UUID): ResponseEntity<List<SaveTagResponse>> {
+    override fun listTags(boardId: UUID): ResponseEntity<List<SavedTagResponse>> {
         return ResponseEntity.ok(tagService.listTags(boardId))
     }
 
