@@ -1,6 +1,7 @@
 package com.kanban.board.domain.port.rest.board
 
 import com.kanban.board.domain.core.model.request.board.AddCardRequest
+import com.kanban.board.domain.core.model.request.board.UpdateCardParticipantsRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
 import com.kanban.board.domain.core.model.response.board.SaveCardResponse
@@ -42,6 +43,14 @@ interface CardController {
         @PathVariable("columnId") columnId: UUID,
         @PathVariable("cardId") cardId: UUID,
         @RequestBody updateCardTagsRequest: UpdateCardTagsRequest
+    ): ResponseEntity<SaveCardResponse>
+
+    @PutMapping("/{cardId}/participants")
+    fun updateCardParticipants(
+        @RequestHeader("Board-Id") boardId: UUID,
+        @PathVariable("columnId") columnId: UUID,
+        @PathVariable("cardId") cardId: UUID,
+        @RequestBody updateCardParticipantsRequest: UpdateCardParticipantsRequest
     ): ResponseEntity<SaveCardResponse>
 
     @GetMapping("/list")

@@ -5,10 +5,13 @@ import com.kanban.board.domain.core.model.entity.board.BoardColumn
 import com.kanban.board.domain.core.model.entity.board.Card
 import com.kanban.board.domain.core.model.entity.board.CardTag
 import com.kanban.board.domain.core.model.entity.board.Tag
+import com.kanban.board.domain.core.model.entity.user.User
+import com.kanban.board.domain.core.model.entity.user.UserCard
 import com.kanban.board.domain.core.model.extension.board.toCardDetailsResponse
 import com.kanban.board.domain.core.model.extension.board.toSaveCardRespose
 import com.kanban.board.domain.core.model.extension.board.toSimpleCardResponse
 import com.kanban.board.domain.core.model.request.board.AddCardRequest
+import com.kanban.board.domain.core.model.request.board.UpdateCardParticipantsRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
 import com.kanban.board.domain.core.model.response.board.SaveCardResponse
@@ -17,6 +20,7 @@ import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardRespons
 import com.kanban.board.domain.port.repository.board.BoardColumnRepository
 import com.kanban.board.domain.port.repository.board.CardRepository
 import com.kanban.board.domain.port.repository.board.TagRepository
+import com.kanban.board.domain.port.repository.user.UserRepository
 import com.kanban.board.domain.port.service.board.CardService
 import com.kanban.board.shared.exception.BadRequestException
 import org.springframework.data.domain.Page
@@ -29,6 +33,7 @@ class CardServiceImpl(
     val cardRepository: CardRepository,
     val boardColumnRepository: BoardColumnRepository,
     val tagRepository: TagRepository,
+    val userRepository: UserRepository,
     val objectMapper: ObjectMapper,
 ): CardService {
 
@@ -96,14 +101,75 @@ class CardServiceImpl(
     ) {
         val notFoundTagsToAdd = updateCardTagsRequest.addTags - addTagsByRequest.map { it.id }.toSet()
         val notFoundTagsToRemove = updateCardTagsRequest.removeTags - card.cardTag.map { it.tag.id }.toSet()
-        if (notFoundTagsToAdd.isNotEmpty()
-            or notFoundTagsToRemove.isNotEmpty()
-        ) {
+        if (notFoundTagsToAdd.isNotEmpty() or notFoundTagsToRemove.isNotEmpty()) {
             throw BadRequestException(
                 message = "Algumas das etiquetas não foram encontradas para adicionar/remover",
                 detail = mapOf(
                     "not_found_ids_to_add" to objectMapper.writeValueAsString(notFoundTagsToAdd),
                     "not_found_ids_to_remove" to objectMapper.writeValueAsString(notFoundTagsToRemove),
+                )
+            )
+        }
+
+        val tagsAlreadyInCard = card.cardTag.filter { it.tag.id in updateCardTagsRequest.addTags }
+        if (tagsAlreadyInCard.isNotEmpty()) {
+            throw BadRequestException(
+                message = "Algumas das etiquetas já estão sendo utilizadas no cartão",
+                detail = mapOf(
+                    "tags_already_in_card" to objectMapper.writeValueAsString(tagsAlreadyInCard)
+                )
+            )
+        }
+    }
+
+    override fun updateCardParticipants(
+        boardId: UUID,
+        columnId: UUID,
+        cardId: UUID,
+        updateCardParticipantsRequest: UpdateCardParticipantsRequest
+    ): SaveCardResponse {
+        val card = findByIdAndBoardColumnIdAndBoardIdOrElseThrow(cardId, columnId, boardId)
+        val addUsersByRequest = userRepository.findAllByIdAndBoardId(
+            updateCardParticipantsRequest.addParticipants,
+            boardId
+        )
+
+        validateUpdateCardParticipants(card, updateCardParticipantsRequest, addUsersByRequest)
+
+        card.apply {
+            this.cardUser.removeAll { it.user.id in updateCardParticipantsRequest.removeParticipants }
+            this.cardUser.addAll(addUsersByRequest.map { UserCard(card = this, user = it) })
+        }
+
+        cardRepository.save(card)
+
+        return card.toSaveCardRespose()
+    }
+
+    private fun validateUpdateCardParticipants(
+        card: Card,
+        updateCardParticipantsRequest: UpdateCardParticipantsRequest,
+        addUsersByRequest: List<User>
+    ) {
+        val notFoundUsersToAdd = updateCardParticipantsRequest.addParticipants - addUsersByRequest.map { it.id }.toSet()
+        val notFoundUsersToRemove = updateCardParticipantsRequest.removeParticipants -
+            card.cardUser.map { it.user.id }.toSet()
+        if (notFoundUsersToAdd.isNotEmpty() or notFoundUsersToRemove.isNotEmpty()) {
+            throw BadRequestException(
+                message = "Alguns dos usuário não foram encontradas para adicionar/remover no cartão",
+                detail = mapOf(
+                    "not_found_ids_to_add" to objectMapper.writeValueAsString(notFoundUsersToAdd),
+                    "not_found_ids_to_remove" to objectMapper.writeValueAsString(notFoundUsersToRemove),
+                )
+            )
+        }
+
+        val usersAlreadyInCard = card.cardUser.filter { it.user.id in updateCardParticipantsRequest.addParticipants }
+        if (usersAlreadyInCard.isNotEmpty()) {
+            throw BadRequestException(
+                message = "Alguns dos usuários já estão participando do cartão",
+                detail = mapOf(
+                    "users_already_in_card" to objectMapper.writeValueAsString(usersAlreadyInCard)
                 )
             )
         }

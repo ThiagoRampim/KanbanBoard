@@ -1,6 +1,7 @@
 package com.kanban.board.domain.core.model.response.board
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.kanban.board.domain.core.model.response.user.UserSimpleResponse
 import java.time.OffsetDateTime
 import java.util.UUID
 
@@ -34,4 +35,7 @@ data class SaveCardResponse(
 
     @JsonProperty("tags")
     val tags: List<SimpleTagResponse> = listOf(),
+
+    @JsonProperty("participants")
+    val participants: List<UserSimpleResponse> = listOf()
 )

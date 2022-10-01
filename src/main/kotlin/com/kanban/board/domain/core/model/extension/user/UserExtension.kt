@@ -5,6 +5,7 @@ import com.kanban.board.domain.core.model.response.user.UserSimpleResponse
 
 fun User.toSimpleUserResponse() =
     UserSimpleResponse(
+        id = this.id,
         userName = this.fullName,
         photoUrl = this.photoUrl
     )

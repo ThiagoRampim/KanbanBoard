@@ -1,6 +1,7 @@
 package com.kanban.board.domain.port.service.board
 
 import com.kanban.board.domain.core.model.request.board.AddCardRequest
+import com.kanban.board.domain.core.model.request.board.UpdateCardParticipantsRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
 import com.kanban.board.domain.core.model.response.board.SaveCardResponse
@@ -21,6 +22,13 @@ interface CardService {
         columnId: UUID,
         cardId: UUID,
         updateCardTagsRequest: UpdateCardTagsRequest
+    ): SaveCardResponse
+
+    fun updateCardParticipants(
+        boardId: UUID,
+        columnId: UUID,
+        cardId: UUID,
+        updateCardParticipantsRequest: UpdateCardParticipantsRequest
     ): SaveCardResponse
 
     fun findCardsByColumn(boardId: UUID, columnId: UUID, pageable: Pageable):Page<SimpleCardResponse>
