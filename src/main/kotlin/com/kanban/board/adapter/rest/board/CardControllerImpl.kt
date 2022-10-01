@@ -2,7 +2,8 @@ package com.kanban.board.adapter.rest.board
 
 import com.kanban.board.domain.core.model.request.board.AddCardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
-import com.kanban.board.domain.core.model.response.board.SaveCardRespose
+import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
+import com.kanban.board.domain.core.model.response.board.SaveCardResponse
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
 import com.kanban.board.domain.port.rest.board.CardController
@@ -26,7 +27,7 @@ class CardControllerImpl(
         boardId: UUID,
         columnId: UUID,
         addCardRequest: AddCardRequest
-    ): ResponseEntity<SaveCardRespose> {
+    ): ResponseEntity<SaveCardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.createCard(boardId, columnId, addCardRequest))
     }
@@ -36,9 +37,19 @@ class CardControllerImpl(
         columnId: UUID,
         cardId: UUID,
         updateCardRequest: UpdateCardRequest
-    ): ResponseEntity<SaveCardRespose> {
+    ): ResponseEntity<SaveCardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.updateCard(boardId, columnId, cardId, updateCardRequest))
+    }
+
+    override fun updateCardTags(
+        boardId: UUID,
+        columnId: UUID,
+        cardId: UUID,
+        updateCardTagsRequest: UpdateCardTagsRequest
+    ): ResponseEntity<SaveCardResponse> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
+        return ResponseEntity.ok(cardService.updateCardTags(boardId, columnId, cardId, updateCardTagsRequest))
     }
 
     override fun findCardsByColumn(

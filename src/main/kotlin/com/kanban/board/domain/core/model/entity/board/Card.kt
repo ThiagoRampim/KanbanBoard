@@ -22,6 +22,10 @@ data class Card(
     var description: String? = null,
 
     @JsonIgnore
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL])
+    var cardTag: MutableList<CardTag> = mutableListOf(),
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_column_id", nullable = false, referencedColumnName = "id")
     var boardColumn: BoardColumn,

@@ -1,17 +1,22 @@
 package com.kanban.board.adapter.service.board
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.kanban.board.domain.core.model.entity.board.BoardColumn
 import com.kanban.board.domain.core.model.entity.board.Card
+import com.kanban.board.domain.core.model.entity.board.CardTag
+import com.kanban.board.domain.core.model.entity.board.Tag
 import com.kanban.board.domain.core.model.extension.board.toCardDetailsResponse
 import com.kanban.board.domain.core.model.extension.board.toSaveCardRespose
 import com.kanban.board.domain.core.model.extension.board.toSimpleCardResponse
 import com.kanban.board.domain.core.model.request.board.AddCardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
-import com.kanban.board.domain.core.model.response.board.SaveCardRespose
+import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
+import com.kanban.board.domain.core.model.response.board.SaveCardResponse
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
 import com.kanban.board.domain.port.repository.board.BoardColumnRepository
 import com.kanban.board.domain.port.repository.board.CardRepository
+import com.kanban.board.domain.port.repository.board.TagRepository
 import com.kanban.board.domain.port.service.board.CardService
 import com.kanban.board.shared.exception.BadRequestException
 import org.springframework.data.domain.Page
@@ -22,10 +27,12 @@ import org.springframework.stereotype.Service
 @Service
 class CardServiceImpl(
     val cardRepository: CardRepository,
-    val boardColumnRepository: BoardColumnRepository
+    val boardColumnRepository: BoardColumnRepository,
+    val tagRepository: TagRepository,
+    val objectMapper: ObjectMapper,
 ): CardService {
 
-    override fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardRespose {
+    override fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardResponse {
         val boardColumn = findBoardColumnByIdAndBoardIdOrElseThrow(columnId, boardId)
         val card = Card(
             title = addCardRequest.title,
@@ -44,7 +51,7 @@ class CardServiceImpl(
         columnId: UUID,
         cardId: UUID,
         updateCardRequest: UpdateCardRequest
-    ): SaveCardRespose {
+    ): SaveCardResponse {
         val card = findByIdAndBoardColumnIdAndBoardIdOrElseThrow(cardId, columnId, boardId)
         card.apply {
             this.title = updateCardRequest.title
@@ -59,6 +66,47 @@ class CardServiceImpl(
         }
 
         return cardRepository.save(card).toSaveCardRespose()
+    }
+
+    override fun updateCardTags(
+        boardId: UUID,
+        columnId: UUID,
+        cardId: UUID,
+        updateCardTagsRequest: UpdateCardTagsRequest
+    ): SaveCardResponse {
+        val card = findByIdAndBoardColumnIdAndBoardIdOrElseThrow(cardId, columnId, boardId)
+        val addTagsByRequest = tagRepository.findAllByIdAndBoardId(updateCardTagsRequest.addTags, boardId)
+
+        validateUpdateCardTags(card, updateCardTagsRequest, addTagsByRequest)
+
+        card.apply {
+            this.cardTag.removeAll { it.tag.id in updateCardTagsRequest.removeTags }
+            this.cardTag.addAll(addTagsByRequest.map { CardTag(card = card, tag = it) })
+        }
+
+        cardRepository.save(card)
+
+        return card.toSaveCardRespose()
+    }
+
+    private fun validateUpdateCardTags(
+        card: Card,
+        updateCardTagsRequest: UpdateCardTagsRequest,
+        addTagsByRequest: List<Tag>
+    ) {
+        val notFoundTagsToAdd = updateCardTagsRequest.addTags - addTagsByRequest.map { it.id }.toSet()
+        val notFoundTagsToRemove = updateCardTagsRequest.removeTags - card.cardTag.map { it.tag.id }.toSet()
+        if (notFoundTagsToAdd.isNotEmpty()
+            or notFoundTagsToRemove.isNotEmpty()
+        ) {
+            throw BadRequestException(
+                message = "Algumas das etiquetas não foram encontradas para adicionar/remover",
+                detail = mapOf(
+                    "not_found_ids_to_add" to objectMapper.writeValueAsString(notFoundTagsToAdd),
+                    "not_found_ids_to_remove" to objectMapper.writeValueAsString(notFoundTagsToRemove),
+                )
+            )
+        }
     }
 
     override fun findCardsByColumn(boardId: UUID, columnId: UUID, pageable: Pageable): Page<SimpleCardResponse> {

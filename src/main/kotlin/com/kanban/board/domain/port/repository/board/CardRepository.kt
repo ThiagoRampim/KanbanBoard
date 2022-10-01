@@ -17,6 +17,8 @@ interface CardRepository: JpaRepository<Card, UUID> {
             FROM Card AS card
             INNER JOIN FETCH card.boardColumn AS boardColumn
             INNER JOIN FETCH boardColumn.board AS board
+            LEFT JOIN FETCH card.cardTag AS cardTag
+            LEFT JOIN FETCH cardTag.tag AS tag
             WHERE card.id = :cardId
             AND boardColumn.id = :boardColumnId
             AND board.id = :boardId

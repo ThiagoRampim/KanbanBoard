@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.OffsetDateTime
 import java.util.UUID
 
-data class SaveCardRespose(
+data class SaveCardResponse(
     @JsonProperty("id")
     val id: UUID,
 
@@ -30,5 +30,8 @@ data class SaveCardRespose(
     val concludedAt: OffsetDateTime? = null,
 
     @JsonProperty("created_at")
-    val createdAt: OffsetDateTime? = null
+    val createdAt: OffsetDateTime? = null,
+
+    @JsonProperty("tags")
+    val tags: List<SimpleTagResponse> = listOf(),
 )

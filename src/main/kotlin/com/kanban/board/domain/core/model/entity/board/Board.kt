@@ -25,15 +25,15 @@ data class Board(
     var name: String,
 
     @JsonIgnore
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL])
     var columns: MutableList<BoardColumn> = mutableListOf(),
 
     @JsonIgnore
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL])
     var tags: MutableList<Tag> = mutableListOf(),
 
     @JsonIgnore
-    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
+    @OneToMany(mappedBy = "board", fetch = FetchType.LAZY, orphanRemoval = true, cascade = [CascadeType.ALL])
     var userRelations: MutableList<UserBoard> = mutableListOf(),
 
     @CreationTimestamp

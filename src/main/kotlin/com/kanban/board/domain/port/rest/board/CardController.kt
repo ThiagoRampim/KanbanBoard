@@ -2,7 +2,8 @@ package com.kanban.board.domain.port.rest.board
 
 import com.kanban.board.domain.core.model.request.board.AddCardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
-import com.kanban.board.domain.core.model.response.board.SaveCardRespose
+import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
+import com.kanban.board.domain.core.model.response.board.SaveCardResponse
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
 import org.springframework.data.domain.Page
@@ -25,7 +26,7 @@ interface CardController {
         @RequestHeader("Board-Id") boardId: UUID,
         @PathVariable("columnId") columnId: UUID,
         @RequestBody addCardRequest: AddCardRequest
-    ): ResponseEntity<SaveCardRespose>
+    ): ResponseEntity<SaveCardResponse>
 
     @PutMapping("/{cardId}")
     fun updateCard(
@@ -33,7 +34,15 @@ interface CardController {
         @PathVariable("columnId") columnId: UUID,
         @PathVariable("cardId") cardId: UUID,
         @RequestBody updateCardRequest: UpdateCardRequest
-    ): ResponseEntity<SaveCardRespose>
+    ): ResponseEntity<SaveCardResponse>
+
+    @PutMapping("/{cardId}/tag")
+    fun updateCardTags(
+        @RequestHeader("Board-Id") boardId: UUID,
+        @PathVariable("columnId") columnId: UUID,
+        @PathVariable("cardId") cardId: UUID,
+        @RequestBody updateCardTagsRequest: UpdateCardTagsRequest
+    ): ResponseEntity<SaveCardResponse>
 
     @GetMapping("/list")
     fun findCardsByColumn(
