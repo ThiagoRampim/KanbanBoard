@@ -39,4 +39,9 @@ data class User(
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, orphanRemoval = false, cascade = [(CascadeType.ALL)])
     var boardRelations: MutableList<UserBoard> = mutableListOf()
-)
+) {
+
+    val fullName: String
+        get() = "$firstName $lastName"
+
+}

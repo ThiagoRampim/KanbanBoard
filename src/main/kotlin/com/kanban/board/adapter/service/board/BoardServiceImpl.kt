@@ -11,6 +11,7 @@ import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
 import com.kanban.board.domain.enums.TagTypeEnum
 import com.kanban.board.domain.port.repository.board.BoardRepository
+import com.kanban.board.domain.port.repository.user.UserRepository
 import com.kanban.board.domain.port.service.board.BoardService
 import com.kanban.board.shared.exception.BadRequestException
 import org.springframework.stereotype.Service
@@ -18,7 +19,8 @@ import java.util.*
 
 @Service
 class BoardServiceImpl(
-    private val boardRepository: BoardRepository
+    private val boardRepository: BoardRepository,
+    private val userRepository: UserRepository,
 ) : BoardService {
 
     override fun createBoard(createBoardRequest: CreateBoardRequest, actorUser: User): SavedBoardResponse {
@@ -55,6 +57,39 @@ class BoardServiceImpl(
         }
 
         return boardRepository.save(board).toSavedBoardResponse()
+    }
+
+    override fun addUserToBoard(boardId: UUID, userEmail: String): SavedBoardResponse {
+        val board = findBoardByIdOrElseThrow(boardId)
+
+        if (board.userRelations.any { it.user.email == userEmail.lowercase() })  {
+            throw BadRequestException("Usuário já é participante do quadro")
+        }
+
+        val userToAdd = userRepository.findByEmail(userEmail.lowercase())
+            ?: throw BadRequestException("Usuário não encontrado")
+
+        board.apply {
+            this.userRelations.add(
+                UserBoard(board = this, user = userToAdd)
+            )
+        }
+
+        boardRepository.save(board)
+
+        return board.toSavedBoardResponse()
+    }
+
+    override fun removeUserToBoard(boardId: UUID, userId: UUID): SavedBoardResponse {
+        val board = findBoardByIdOrElseThrow(boardId)
+
+        board.apply {
+            this.userRelations.removeAll { it.user.id == userId }
+        }
+
+        boardRepository.save(board)
+
+        return board.toSavedBoardResponse()
     }
 
     override fun findBoard(boardId: UUID): SavedBoardResponse {

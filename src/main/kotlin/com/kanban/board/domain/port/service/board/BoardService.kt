@@ -13,6 +13,10 @@ interface BoardService {
 
     fun updateBoard(boardId: UUID, updateBoardRequest: UpdateBoardRequest): SavedBoardResponse
 
+    fun addUserToBoard(boardId: UUID, userEmail: String): SavedBoardResponse
+
+    fun removeUserToBoard(boardId: UUID, userId: UUID): SavedBoardResponse
+
     fun findBoard(boardId: UUID): SavedBoardResponse
 
     fun findBoardByIdOrElseThrow(boardId: UUID): Board

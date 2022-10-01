@@ -31,6 +31,19 @@ class BoardControllerImpl(
         return ResponseEntity.ok(boardService.updateBoard(boardId, updateBoardRequest))
     }
 
+    override fun addUserToBoard(
+        boardId: UUID,
+        userEmail: String
+    ): ResponseEntity<SavedBoardResponse> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
+        return ResponseEntity.ok(boardService.addUserToBoard(boardId, userEmail))
+    }
+
+    override fun removeUserToBoard(boardId: UUID, userId: UUID): ResponseEntity<SavedBoardResponse> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
+        return ResponseEntity.ok(boardService.removeUserToBoard(boardId, userId))
+    }
+
     override fun findBoard(boardId: UUID): ResponseEntity<SavedBoardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(boardService.findBoard(boardId))
