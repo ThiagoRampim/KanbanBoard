@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import java.util.UUID
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 
@@ -45,5 +46,30 @@ interface CardRepository: JpaRepository<Card, UUID> {
         """
     )
     fun findAllByBoardColumnIdAndColumnId(boardColumnId: UUID, boardId: UUID, pageable: Pageable): Page<Card>
+
+    @Query(
+        """
+            SELECT MAX(card.order)
+            FROM Card AS card
+            WHERE card.boardColumn.id = :boardColumnId
+        """
+    )
+    fun findTopOrderFromColumn(boardColumnId: UUID): Int?
+
+    @Modifying
+    @Query(
+        """
+            UPDATE board.card
+            SET "order" = "order" + 1
+            WHERE board_column_id = :newColumnId
+            AND "order" >= :orderValue ;
+            
+            UPDATE board.card
+            SET board_column_id = :newColumnId,
+                "order" = :orderValue
+            WHERE id = :cardId
+        """, nativeQuery = true
+    )
+    fun moveCardTo(cardId: UUID, newColumnId: UUID, orderValue: Int)
 
 }

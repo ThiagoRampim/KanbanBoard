@@ -1,9 +1,6 @@
 package com.kanban.board.domain.port.service.board
 
-import com.kanban.board.domain.core.model.request.board.AddCardRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardParticipantsRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
+import com.kanban.board.domain.core.model.request.board.*
 import com.kanban.board.domain.core.model.response.board.SaveCardResponse
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
@@ -16,6 +13,8 @@ interface CardService {
     fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardResponse
 
     fun updateCard(boardId: UUID, columnId: UUID, cardId: UUID, updateCardRequest: UpdateCardRequest): SaveCardResponse
+
+    fun moveCardTo(boardId: UUID, columnId: UUID, cardId: UUID, moveCardToRequest: MoveCardToRequest): SaveCardResponse
 
     fun updateCardTags(
         boardId: UUID,

@@ -10,10 +10,7 @@ import com.kanban.board.domain.core.model.entity.user.UserCard
 import com.kanban.board.domain.core.model.extension.board.toCardDetailsResponse
 import com.kanban.board.domain.core.model.extension.board.toSaveCardRespose
 import com.kanban.board.domain.core.model.extension.board.toSimpleCardResponse
-import com.kanban.board.domain.core.model.request.board.AddCardRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardParticipantsRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
+import com.kanban.board.domain.core.model.request.board.*
 import com.kanban.board.domain.core.model.response.board.SaveCardResponse
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
@@ -27,6 +24,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import java.util.UUID
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class CardServiceImpl(
@@ -39,13 +37,16 @@ class CardServiceImpl(
 
     override fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardResponse {
         val boardColumn = findBoardColumnByIdAndBoardIdOrElseThrow(columnId, boardId)
+        val greaterCardOrder = cardRepository.findTopOrderFromColumn(columnId)
+
         val card = Card(
             title = addCardRequest.title,
             description = addCardRequest.description,
             boardColumn = boardColumn,
             startDate = addCardRequest.startDate,
             endDate = addCardRequest.endDate,
-            concludedAt = addCardRequest.concludedAt
+            concludedAt = addCardRequest.concludedAt,
+            order = greaterCardOrder?.let { it + 1 } ?: 0
         )
 
         return cardRepository.save(card).toSaveCardRespose()
@@ -71,6 +72,20 @@ class CardServiceImpl(
         }
 
         return cardRepository.save(card).toSaveCardRespose()
+    }
+
+    @Transactional
+    override fun moveCardTo(
+        boardId: UUID,
+        columnId: UUID,
+        cardId: UUID,
+        moveCardToRequest: MoveCardToRequest
+    ): SaveCardResponse {
+        val card = findByIdAndBoardColumnIdAndBoardIdOrElseThrow(cardId, columnId, boardId)
+
+        cardRepository.moveCardTo(cardId, moveCardToRequest.columnId, moveCardToRequest.order)
+
+        return card.toSaveCardRespose()
     }
 
     override fun updateCardTags(

@@ -44,6 +44,9 @@ data class Card(
     @Column(name = "concluded_at", nullable = true)
     var concludedAt: OffsetDateTime? = null,
 
+    @Column(name = "order", nullable = false)
+    var order: Int,
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
     var createdAt: OffsetDateTime = now()

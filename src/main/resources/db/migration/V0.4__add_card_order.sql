@@ -1,0 +1,7 @@
+ALTER TABLE board.card
+    ADD COLUMN IF NOT EXISTS "order" INT4 NOT NULL DEFAULT 0;
+
+-- ROLLBACK
+
+-- ALTER TABLE board.card
+-- DROP COLUMN IF EXISTS "order";

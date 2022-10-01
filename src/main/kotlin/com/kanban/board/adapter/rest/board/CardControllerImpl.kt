@@ -1,9 +1,6 @@
 package com.kanban.board.adapter.rest.board
 
-import com.kanban.board.domain.core.model.request.board.AddCardRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardParticipantsRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardRequest
-import com.kanban.board.domain.core.model.request.board.UpdateCardTagsRequest
+import com.kanban.board.domain.core.model.request.board.*
 import com.kanban.board.domain.core.model.response.board.SaveCardResponse
 import com.kanban.board.domain.core.model.response.boardColumn.CardDetailsResponse
 import com.kanban.board.domain.core.model.response.boardColumn.SimpleCardResponse
@@ -41,6 +38,16 @@ class CardControllerImpl(
     ): ResponseEntity<SaveCardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(cardService.updateCard(boardId, columnId, cardId, updateCardRequest))
+    }
+
+    override fun moveCardTo(
+        boardId: UUID,
+        columnId: UUID,
+        cardId: UUID,
+        moveCardToRequest: MoveCardToRequest
+    ): ResponseEntity<SaveCardResponse> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
+        return ResponseEntity.ok(cardService.moveCardTo(boardId, columnId, cardId, moveCardToRequest))
     }
 
     override fun updateCardTags(
