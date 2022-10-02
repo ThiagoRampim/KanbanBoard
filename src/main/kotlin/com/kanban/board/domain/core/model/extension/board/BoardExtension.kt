@@ -11,5 +11,5 @@ fun Board.toSavedBoardResponse() =
         createdAt = this.createdAt,
         columns = this.columns.map { it.toSavedBoardColumnResponse() }.sortedBy { it.position },
         tags = this.tags.map { it.toSavedTagResponse() },
-        users = this.userRelations.map { it.user.toSimpleUserResponse() }
+        members = this.userRelations.map { it.user.toSimpleUserResponse() }
     )

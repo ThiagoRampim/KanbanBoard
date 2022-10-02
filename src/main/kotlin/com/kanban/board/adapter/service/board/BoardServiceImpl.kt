@@ -6,9 +6,11 @@ import com.kanban.board.domain.core.model.entity.board.Tag
 import com.kanban.board.domain.core.model.entity.user.User
 import com.kanban.board.domain.core.model.entity.user.UserBoard
 import com.kanban.board.domain.core.model.extension.board.toSavedBoardResponse
+import com.kanban.board.domain.core.model.extension.user.toSimpleUserResponse
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
 import com.kanban.board.domain.enums.TagTypeEnum
 import com.kanban.board.domain.port.repository.board.BoardRepository
 import com.kanban.board.domain.port.repository.user.UserRepository
@@ -59,7 +61,7 @@ class BoardServiceImpl(
         return boardRepository.save(board).toSavedBoardResponse()
     }
 
-    override fun addUserToBoard(boardId: UUID, userEmail: String): SavedBoardResponse {
+    override fun addMemberToBoard(boardId: UUID, userEmail: String): SavedBoardResponse {
         val board = findBoardByIdOrElseThrow(boardId)
 
         if (board.userRelations.any { it.user.email == userEmail.lowercase() })  {
@@ -80,7 +82,7 @@ class BoardServiceImpl(
         return board.toSavedBoardResponse()
     }
 
-    override fun removeUserToBoard(boardId: UUID, userId: UUID): SavedBoardResponse {
+    override fun removeMemberToBoard(boardId: UUID, userId: UUID): SavedBoardResponse {
         val board = findBoardByIdOrElseThrow(boardId)
 
         board.apply {
@@ -94,6 +96,11 @@ class BoardServiceImpl(
 
     override fun findBoard(boardId: UUID): SavedBoardResponse {
         return findBoardByIdOrElseThrow(boardId).toSavedBoardResponse()
+    }
+
+    override fun findBoardMembers(boardId: UUID): List<SimpleUserResponse> {
+        return userRepository.findAllByBoardId(boardId)
+            .map { it.toSimpleUserResponse() }
     }
 
     override fun findBoardByIdOrElseThrow(boardId: UUID): Board {

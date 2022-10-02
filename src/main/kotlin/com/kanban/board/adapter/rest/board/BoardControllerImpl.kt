@@ -3,6 +3,7 @@ package com.kanban.board.adapter.rest.board
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
 import com.kanban.board.domain.port.rest.board.BoardController
 import com.kanban.board.domain.port.service.board.BoardService
 import com.kanban.board.domain.port.service.user.UserService
@@ -31,22 +32,27 @@ class BoardControllerImpl(
         return ResponseEntity.ok(boardService.updateBoard(boardId, updateBoardRequest))
     }
 
-    override fun addUserToBoard(
+    override fun addMemberToBoard(
         boardId: UUID,
         userEmail: String
     ): ResponseEntity<SavedBoardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
-        return ResponseEntity.ok(boardService.addUserToBoard(boardId, userEmail))
+        return ResponseEntity.ok(boardService.addMemberToBoard(boardId, userEmail))
     }
 
-    override fun removeUserToBoard(boardId: UUID, userId: UUID): ResponseEntity<SavedBoardResponse> {
+    override fun removeMemberToBoard(boardId: UUID, userId: UUID): ResponseEntity<SavedBoardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
-        return ResponseEntity.ok(boardService.removeUserToBoard(boardId, userId))
+        return ResponseEntity.ok(boardService.removeMemberToBoard(boardId, userId))
     }
 
     override fun findBoard(boardId: UUID): ResponseEntity<SavedBoardResponse> {
         userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
         return ResponseEntity.ok(boardService.findBoard(boardId))
+    }
+
+    override fun findBoardMembers(boardId: UUID): ResponseEntity<List<SimpleUserResponse>> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
+        return ResponseEntity.ok(boardService.findBoardMembers(boardId))
     }
 
 }

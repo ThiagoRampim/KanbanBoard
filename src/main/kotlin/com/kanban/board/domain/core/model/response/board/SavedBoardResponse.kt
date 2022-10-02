@@ -1,7 +1,7 @@
 package com.kanban.board.domain.core.model.response.board
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.kanban.board.domain.core.model.response.user.UserSimpleResponse
+import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
 import java.time.OffsetDateTime
 import java.util.*
 import kotlin.collections.List
@@ -22,6 +22,6 @@ data class SavedBoardResponse(
     @JsonProperty("tags")
     val tags: List<SavedTagResponse>,
 
-    @JsonProperty("users")
-    val users: List<UserSimpleResponse>
+    @JsonProperty("members")
+    val members: List<SimpleUserResponse>
 )

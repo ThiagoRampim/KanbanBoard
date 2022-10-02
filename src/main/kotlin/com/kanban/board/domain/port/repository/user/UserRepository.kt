@@ -25,6 +25,17 @@ interface UserRepository : JpaRepository<User, UUID> {
 
     @Query(
         """
+            SELECT user
+            FROM User AS user
+            INNER JOIN user.boardRelations AS userBoard
+            INNER JOIN userBoard.board AS board
+            WHERE board.id = :boardId
+        """
+    )
+    fun findAllByBoardId(boardId: UUID): List<User>
+
+    @Query(
+        """
             SELECT COUNT(board.id) > 0 
             FROM User AS user
             LEFT JOIN user.boardRelations AS userBoard

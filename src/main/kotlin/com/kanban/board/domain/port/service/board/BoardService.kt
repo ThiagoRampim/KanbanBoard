@@ -5,6 +5,7 @@ import com.kanban.board.domain.core.model.entity.user.User
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
 import java.util.*
 
 interface BoardService {
@@ -13,11 +14,13 @@ interface BoardService {
 
     fun updateBoard(boardId: UUID, updateBoardRequest: UpdateBoardRequest): SavedBoardResponse
 
-    fun addUserToBoard(boardId: UUID, userEmail: String): SavedBoardResponse
+    fun addMemberToBoard(boardId: UUID, userEmail: String): SavedBoardResponse
 
-    fun removeUserToBoard(boardId: UUID, userId: UUID): SavedBoardResponse
+    fun removeMemberToBoard(boardId: UUID, userId: UUID): SavedBoardResponse
 
     fun findBoard(boardId: UUID): SavedBoardResponse
+
+    fun findBoardMembers(boardId: UUID): List<SimpleUserResponse>
 
     fun findBoardByIdOrElseThrow(boardId: UUID): Board
 
