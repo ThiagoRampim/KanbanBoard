@@ -1,6 +1,5 @@
 package com.kanban.board.adapter.service.board
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.kanban.board.domain.core.model.entity.board.BoardColumn
 import com.kanban.board.domain.core.model.entity.board.Card
 import com.kanban.board.domain.core.model.entity.board.CardTag
@@ -31,8 +30,7 @@ class CardServiceImpl(
     val cardRepository: CardRepository,
     val boardColumnRepository: BoardColumnRepository,
     val tagRepository: TagRepository,
-    val userRepository: UserRepository,
-    val objectMapper: ObjectMapper,
+    val userRepository: UserRepository
 ): CardService {
 
     override fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardResponse {
@@ -83,7 +81,11 @@ class CardServiceImpl(
     ): SaveCardResponse {
         val card = findByIdAndBoardColumnIdAndBoardIdOrElseThrow(cardId, columnId, boardId)
 
-        cardRepository.moveCardTo(cardId, moveCardToRequest.columnId, moveCardToRequest.order)
+        try {
+            cardRepository.moveCardTo(cardId, moveCardToRequest.columnId, moveCardToRequest.order)
+        } catch (exception: Exception) {
+            throw BadRequestException("Não foi possível concluir a movimentação do cartão")
+        }
 
         return card.toSaveCardRespose()
     }
@@ -120,8 +122,8 @@ class CardServiceImpl(
             throw BadRequestException(
                 message = "Algumas das etiquetas não foram encontradas para adicionar/remover",
                 detail = mapOf(
-                    "not_found_ids_to_add" to objectMapper.writeValueAsString(notFoundTagsToAdd),
-                    "not_found_ids_to_remove" to objectMapper.writeValueAsString(notFoundTagsToRemove),
+                    "not_found_ids_to_add" to notFoundTagsToAdd,
+                    "not_found_ids_to_remove" to notFoundTagsToRemove,
                 )
             )
         }
@@ -131,7 +133,7 @@ class CardServiceImpl(
             throw BadRequestException(
                 message = "Algumas das etiquetas já estão sendo utilizadas no cartão",
                 detail = mapOf(
-                    "tags_already_in_card" to objectMapper.writeValueAsString(tagsAlreadyInCard)
+                    "tags_already_in_card" to tagsAlreadyInCard.map { it.tag.id }
                 )
             )
         }
@@ -173,8 +175,8 @@ class CardServiceImpl(
             throw BadRequestException(
                 message = "Alguns dos usuário não foram encontradas para adicionar/remover no cartão",
                 detail = mapOf(
-                    "not_found_ids_to_add" to objectMapper.writeValueAsString(notFoundUsersToAdd),
-                    "not_found_ids_to_remove" to objectMapper.writeValueAsString(notFoundUsersToRemove),
+                    "not_found_ids_to_add" to notFoundUsersToAdd,
+                    "not_found_ids_to_remove" to notFoundUsersToRemove,
                 )
             )
         }
@@ -184,7 +186,7 @@ class CardServiceImpl(
             throw BadRequestException(
                 message = "Alguns dos usuários já estão participando do cartão",
                 detail = mapOf(
-                    "users_already_in_card" to objectMapper.writeValueAsString(usersAlreadyInCard)
+                    "users_already_in_card" to usersAlreadyInCard.map { it.user.id }
                 )
             )
         }
