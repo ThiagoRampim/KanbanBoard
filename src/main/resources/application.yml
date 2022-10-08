@@ -24,10 +24,28 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         show_sql: false
         format_sql: true
+  mail:
+    host: smtp-mail.outlook.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+          ssl:
+            enable: false
+    test-connection: true
 
 springdoc:
   packagesToScan: com.kanban.board
 
+user-authentication:
+  newUserConfirmationEmailRootLink: https://www.google.com/
+  rewritePasswordRootLink: https://www.google.com/
 
 logging:
   level:
