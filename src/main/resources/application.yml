@@ -25,8 +25,8 @@ spring:
         show_sql: false
         format_sql: true
   mail:
-    host: smtp-mail.outlook.com
-    port: 587
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
     username: ${MAIL_USERNAME}
     password: ${MAIL_PASSWORD}
     properties:
