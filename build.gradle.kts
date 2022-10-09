@@ -52,3 +52,7 @@ tasks.withType<KotlinCompile> {
 tasks.withType<Test> {
 	useJUnitPlatform()
 }
+
+tasks.bootBuildImage.configure {
+	imageName = "kanban-board"
+}
