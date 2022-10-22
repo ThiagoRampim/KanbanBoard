@@ -26,6 +26,8 @@ class WebSecurityConfig(
         http
             .headers().frameOptions().deny()
             .and()
+            .cors()
+            .and()
             .csrf().disable()
             .formLogin().disable()
             .httpBasic().disable()
