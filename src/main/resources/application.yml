@@ -43,9 +43,12 @@ spring:
 springdoc:
   packagesToScan: com.kanban.board
 
+kanban:
+  frontEndBaseUrl: ${KANBAN_FRONTEND_BASE_URL}
+
 user-authentication:
-  newUserConfirmationEmailRootLink: https://www.google.com/
-  rewritePasswordRootLink: https://www.google.com/
+  newUserConfirmationEmailRootLink: ${kanban.frontEndBaseUrl}/confirm-email
+  rewritePasswordRootLink: ${kanban.frontEndBaseUrl}/redefine-password
 
 logging:
   level:

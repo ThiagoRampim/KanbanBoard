@@ -19,7 +19,7 @@ class EmailServiceImpl(
         sendEmail(
             subject = "Confirme seu email",
             message = "Confirme seu email para concluir seu cadastro através do link:" +
-                "\n${userAuthenticationConfiguration.newUserConfirmationEmailRootLink}${token}",
+                "\n${userAuthenticationConfiguration.newUserConfirmationEmailRootLink}/${token}",
             toEmail = toEmail
         )
     }
@@ -28,7 +28,7 @@ class EmailServiceImpl(
         sendEmail(
             subject = "Recuperação de senha",
             message = "Recupere sua senha através do link:" +
-                "\n${userAuthenticationConfiguration.rewritePasswordRootLink}${token}",
+                "\n${userAuthenticationConfiguration.rewritePasswordRootLink}/${token}",
             toEmail = toEmail
         )
     }
