@@ -8,3 +8,5 @@ EXPOSE 8080
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*.jar /app/kanban-board.jar
 ENTRYPOINT ["java", "-jar", "/app/kanban-board.jar"]
+#COPY --from=build /home/gradle/src/build/libs/*.jar /app/
+#ENTRYPOINT ["java", "-jar", "/app/kanban-0.0.1-SNAPSHOT.jar"]
