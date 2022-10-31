@@ -3,7 +3,10 @@ package com.kanban.board.domain.port.rest.board
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.core.model.response.board.SimpleBoardResponse
 import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -39,6 +42,11 @@ interface BoardController {
         @PathVariable boardId: UUID,
         @PathVariable userId: UUID,
     ): ResponseEntity<SavedBoardResponse>
+
+    @GetMapping
+    fun findBoard(
+        pageable: Pageable
+    ): ResponseEntity<Page<SimpleBoardResponse>>
 
     @GetMapping("/{boardId}")
     fun findBoard(

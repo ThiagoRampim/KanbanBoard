@@ -6,16 +6,20 @@ import com.kanban.board.domain.core.model.entity.board.Tag
 import com.kanban.board.domain.core.model.entity.user.User
 import com.kanban.board.domain.core.model.entity.user.UserBoard
 import com.kanban.board.domain.core.model.extension.board.toSavedBoardResponse
+import com.kanban.board.domain.core.model.extension.board.toSimpleBoardResponse
 import com.kanban.board.domain.core.model.extension.user.toSimpleUserResponse
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.core.model.response.board.SimpleBoardResponse
 import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
 import com.kanban.board.domain.enums.TagTypeEnum
 import com.kanban.board.domain.port.repository.board.BoardRepository
 import com.kanban.board.domain.port.repository.user.UserRepository
 import com.kanban.board.domain.port.service.board.BoardService
 import com.kanban.board.shared.exception.BadRequestException
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.util.*
 
@@ -96,6 +100,11 @@ class BoardServiceImpl(
 
     override fun findBoard(boardId: UUID): SavedBoardResponse {
         return findBoardByIdOrElseThrow(boardId).toSavedBoardResponse()
+    }
+
+    override fun findBoardByUserEmail(userEmail: String, pageable: Pageable): Page<SimpleBoardResponse> {
+        return boardRepository.findByUserEmail(userEmail, pageable)
+            .map { it.toSimpleBoardResponse() }
     }
 
     override fun findBoardMembers(boardId: UUID): List<SimpleUserResponse> {

@@ -5,7 +5,10 @@ import com.kanban.board.domain.core.model.entity.user.User
 import com.kanban.board.domain.core.model.request.board.CreateBoardRequest
 import com.kanban.board.domain.core.model.request.board.UpdateBoardRequest
 import com.kanban.board.domain.core.model.response.board.SavedBoardResponse
+import com.kanban.board.domain.core.model.response.board.SimpleBoardResponse
 import com.kanban.board.domain.core.model.response.user.SimpleUserResponse
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import java.util.*
 
 interface BoardService {
@@ -19,6 +22,8 @@ interface BoardService {
     fun removeMemberToBoard(boardId: UUID, userId: UUID): SavedBoardResponse
 
     fun findBoard(boardId: UUID): SavedBoardResponse
+
+    fun findBoardByUserEmail(userEmail: String, pageable: Pageable): Page<SimpleBoardResponse>
 
     fun findBoardMembers(boardId: UUID): List<SimpleUserResponse>
 
