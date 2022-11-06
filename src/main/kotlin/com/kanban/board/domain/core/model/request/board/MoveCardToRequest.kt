@@ -5,8 +5,5 @@ import java.util.UUID
 
 data class MoveCardToRequest(
     @JsonProperty("column_id")
-    val columnId: UUID,
-
-    @JsonProperty("order")
-    val order: Int
+    val columnId: UUID
 )

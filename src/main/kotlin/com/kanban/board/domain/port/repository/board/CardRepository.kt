@@ -35,6 +35,7 @@ interface CardRepository: JpaRepository<Card, UUID> {
             INNER JOIN FETCH boardColumn.board AS board
             WHERE boardColumn.id = :boardColumnId
             AND board.id = :boardId
+            ORDER BY card.priority DESC, card.reachCurrentColumnAt ASC
         """,
         countQuery = """
             SELECT COUNT(card)
@@ -47,29 +48,15 @@ interface CardRepository: JpaRepository<Card, UUID> {
     )
     fun findAllByBoardColumnIdAndColumnId(boardColumnId: UUID, boardId: UUID, pageable: Pageable): Page<Card>
 
-    @Query(
-        """
-            SELECT MAX(card.order)
-            FROM Card AS card
-            WHERE card.boardColumn.id = :boardColumnId
-        """
-    )
-    fun findTopOrderFromColumn(boardColumnId: UUID): Int?
-
     @Modifying
     @Query(
         """
             UPDATE board.card
-            SET "order" = "order" + 1
-            WHERE board_column_id = :newColumnId
-            AND "order" >= :orderValue ;
-            
-            UPDATE board.card
             SET board_column_id = :newColumnId,
-                "order" = :orderValue
+                reach_current_column_at = NOW()
             WHERE id = :cardId
         """, nativeQuery = true
     )
-    fun moveCardTo(cardId: UUID, newColumnId: UUID, orderValue: Int)
+    fun moveCardTo(cardId: UUID, newColumnId: UUID)
 
 }

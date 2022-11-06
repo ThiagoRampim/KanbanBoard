@@ -19,6 +19,7 @@ import java.time.ZoneOffset
 class WebSecurityConfig(
     private val userDetailsService: UserDetailsService,
     private val encryptConfiguration: EncryptConfiguration,
+    private val jwtGeneratorConfiguration: JWTGeneratorConfiguration,
     private val objectMapper: ObjectMapper
 ) : WebSecurityConfigurerAdapter() {
 
@@ -37,7 +38,7 @@ class WebSecurityConfig(
             .mvcMatchers("/public/**").permitAll()
             .anyRequest().authenticated()
             .and()
-            .addFilter(JWTAuthenticationFilter(authenticationManager(), objectMapper))
+            .addFilter(JWTAuthenticationFilter(authenticationManager(), jwtGeneratorConfiguration, objectMapper))
             .addFilter(JWTAuthorizationFilter(authenticationManager()))
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
     }

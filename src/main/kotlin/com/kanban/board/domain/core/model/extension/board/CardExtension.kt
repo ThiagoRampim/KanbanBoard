@@ -24,7 +24,8 @@ fun Card.toSaveCardRespose() =
 fun Card.toSimpleCardResponse() =
     SimpleCardResponse(
         id = this.id,
-        title = this.title
+        title = this.title,
+        users = this.cardUser.map { it.user.toSimpleUserResponse() }
     )
 
 fun Card.toCardDetailsResponse() =
@@ -32,6 +33,8 @@ fun Card.toCardDetailsResponse() =
         id = this.id,
         title = this.title,
         description = this.description,
+        priority = this.priority,
+        users = this.cardUser.map { it.user.toSimpleUserResponse() },
         startDate = this.startDate,
         endDate = this.endDate,
         concludedAt = this.concludedAt,

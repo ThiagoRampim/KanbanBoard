@@ -35,16 +35,15 @@ class CardServiceImpl(
 
     override fun createCard(boardId: UUID, columnId: UUID, addCardRequest: AddCardRequest): SaveCardResponse {
         val boardColumn = findBoardColumnByIdAndBoardIdOrElseThrow(columnId, boardId)
-        val greaterCardOrder = cardRepository.findTopOrderFromColumn(columnId)
 
         val card = Card(
             title = addCardRequest.title,
             description = addCardRequest.description,
+            priority = addCardRequest.priority,
             boardColumn = boardColumn,
             startDate = addCardRequest.startDate,
             endDate = addCardRequest.endDate,
-            concludedAt = addCardRequest.concludedAt,
-            order = greaterCardOrder?.let { it + 1 } ?: 0
+            concludedAt = addCardRequest.concludedAt
         )
 
         return cardRepository.save(card).toSaveCardRespose()
@@ -60,6 +59,7 @@ class CardServiceImpl(
         card.apply {
             this.title = updateCardRequest.title
             this.description = updateCardRequest.description
+            this.priority = updateCardRequest.priority
             this.startDate = updateCardRequest.startDate
             this.endDate = updateCardRequest.endDate
             this.concludedAt = updateCardRequest.concludedAt
@@ -82,7 +82,7 @@ class CardServiceImpl(
         val card = findByIdAndBoardColumnIdAndBoardIdOrElseThrow(cardId, columnId, boardId)
 
         try {
-            cardRepository.moveCardTo(cardId, moveCardToRequest.columnId, moveCardToRequest.order)
+            cardRepository.moveCardTo(cardId, moveCardToRequest.columnId)
         } catch (exception: Exception) {
             throw BadRequestException("Não foi possível concluir a movimentação do cartão")
         }

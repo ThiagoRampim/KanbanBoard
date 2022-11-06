@@ -2,20 +2,26 @@ package com.kanban.board.adapter.service.user
 
 import com.kanban.board.domain.core.model.entity.user.Token
 import com.kanban.board.domain.core.model.entity.user.User
+import com.kanban.board.domain.core.model.extension.user.toUserResponse
 import com.kanban.board.domain.core.model.request.user.CreateUserRequest
 import com.kanban.board.domain.core.model.request.user.ForgetPasswordRequest
 import com.kanban.board.domain.core.model.request.user.OverwritePasswordRequest
+import com.kanban.board.domain.core.model.request.user.UpdateUserRequest
+import com.kanban.board.domain.core.model.response.user.UserResponse
+import com.kanban.board.domain.core.model.response.user.authentication.AuthTokenResponse
 import com.kanban.board.domain.enums.user.TokenTypeEnum.OVERWRITE_PASSWORD
 import com.kanban.board.domain.port.repository.user.TokenRepository
 import com.kanban.board.domain.port.repository.user.UserRepository
 import com.kanban.board.domain.port.service.email.EmailService
 import com.kanban.board.domain.port.service.user.UserService
 import com.kanban.board.infrastructure.configuration.EncryptConfiguration
+import com.kanban.board.infrastructure.configuration.JWTGeneratorConfiguration
 import com.kanban.board.infrastructure.extension.currentUserEmail
 import com.kanban.board.infrastructure.extension.currentUserEmailOrElseThrow
 import com.kanban.board.shared.exception.BadRequestException
 import com.kanban.board.shared.exception.InternalServerErrorException
 import com.kanban.board.shared.utils.randomString
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import java.time.OffsetDateTime.now
 import java.util.*
@@ -26,7 +32,12 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val tokenRepository: TokenRepository,
     private val encryptConfiguration: EncryptConfiguration,
+    private val jwtGeneratorConfiguration: JWTGeneratorConfiguration,
 ) : UserService {
+
+    override fun me(): UserResponse {
+        return currentUserOrElseThrow().toUserResponse()
+    }
 
     override fun create(createUserRequest: CreateUserRequest) {
         val newUser = User(
@@ -37,6 +48,22 @@ class UserServiceImpl(
             password = encodeUserPassword(createUserRequest.password)
         )
         userRepository.save(newUser)
+    }
+
+    override fun update(userId: UUID, updateUserRequest: UpdateUserRequest) {
+        val user = userRepository.findByIdOrNull(userId)
+            ?: throw BadRequestException("Usuário não encontrado")
+
+        if (user.id != currentUser()?.id) {
+            throw BadRequestException("Usuário apenas pode alterar seu proprio usuário")
+        }
+
+        user.apply {
+            this.firstName = updateUserRequest.firstName
+            this.lastName = updateUserRequest.lastName
+            this.photoUrl = updateUserRequest.photoUrl
+        }
+        userRepository.save(user)
     }
 
     override fun forgetPassword(forgetPasswordRequest: ForgetPasswordRequest) {
@@ -98,6 +125,10 @@ class UserServiceImpl(
         if (!currentUserHasAccessToBoard(boardId)) {
             throw customError ?: BadRequestException("Usuário não tem acesso a este quadro")
         }
+    }
+
+    override fun refreshBearerToken(): AuthTokenResponse {
+        return jwtGeneratorConfiguration.generateJWT(currentUserEmailOrElseThrow())
     }
 
     private fun encodeUserPassword(password: String): String {

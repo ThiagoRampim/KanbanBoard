@@ -10,6 +10,9 @@ data class AddCardRequest(
     @JsonProperty("description")
     val description: String? = null,
 
+    @JsonProperty("priority")
+    val priority: Int,
+
     @JsonProperty("start_date")
     val startDate: OffsetDateTime? = null,
 

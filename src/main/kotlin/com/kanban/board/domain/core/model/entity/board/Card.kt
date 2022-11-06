@@ -44,8 +44,11 @@ data class Card(
     @Column(name = "concluded_at", nullable = true)
     var concludedAt: OffsetDateTime? = null,
 
-    @Column(name = "order", nullable = false)
-    var order: Int,
+    @Column(name = "priority", nullable = false)
+    var priority: Int,
+
+    @Column(name = "reach_current_column_at", nullable = false)
+    var reachCurrentColumnAt: OffsetDateTime = now(),
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false)
