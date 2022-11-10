@@ -49,6 +49,11 @@ class BoardControllerImpl(
         return ResponseEntity.ok(boardService.removeMemberToBoard(boardId, userId))
     }
 
+    override fun leaveBoard(boardId: UUID): ResponseEntity<Any> {
+        userService.blockIfCurrentUserHasNotAccessToBoard(boardId)
+        return ResponseEntity.ok(boardService.leaveBoard(boardId))
+    }
+
     override fun findBoard(pageable: Pageable): ResponseEntity<Page<SimpleBoardResponse>> {
         return ResponseEntity.ok(boardService.findBoardByUserEmail(currentUserEmailOrElseThrow(), pageable))
     }

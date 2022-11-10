@@ -43,6 +43,11 @@ interface BoardController {
         @PathVariable userId: UUID,
     ): ResponseEntity<SavedBoardResponse>
 
+    @DeleteMapping("/{boardId}/leave")
+    fun leaveBoard(
+        @PathVariable boardId: UUID
+    ): ResponseEntity<Any>
+
     @GetMapping
     fun findBoard(
         pageable: Pageable

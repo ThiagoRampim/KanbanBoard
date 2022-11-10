@@ -21,6 +21,8 @@ interface BoardService {
 
     fun removeMemberToBoard(boardId: UUID, userId: UUID): SavedBoardResponse
 
+    fun leaveBoard(boardId: UUID)
+
     fun findBoard(boardId: UUID): SavedBoardResponse
 
     fun findBoardByUserEmail(userEmail: String, pageable: Pageable): Page<SimpleBoardResponse>

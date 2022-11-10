@@ -17,6 +17,7 @@ import com.kanban.board.domain.enums.TagTypeEnum
 import com.kanban.board.domain.port.repository.board.BoardRepository
 import com.kanban.board.domain.port.repository.user.UserRepository
 import com.kanban.board.domain.port.service.board.BoardService
+import com.kanban.board.infrastructure.extension.currentUserEmailOrElseThrow
 import com.kanban.board.shared.exception.BadRequestException
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -96,6 +97,16 @@ class BoardServiceImpl(
         boardRepository.save(board)
 
         return board.toSavedBoardResponse()
+    }
+
+    override fun leaveBoard(boardId: UUID) {
+        val board = findBoardByIdOrElseThrow(boardId)
+
+        board.apply {
+            this.userRelations.removeAll { it.user.email == currentUserEmailOrElseThrow() }
+        }
+
+        boardRepository.save(board)
     }
 
     override fun findBoard(boardId: UUID): SavedBoardResponse {
